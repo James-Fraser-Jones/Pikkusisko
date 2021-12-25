@@ -1,39 +1,50 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Scenes/Main/PolygonManager.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Main/Main.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Main/Player.gd" type="Script" id=2]
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 20.0
+height = 30.0
 
 [node name="Main" type="Node2D"]
-
-[node name="PolygonManager" type="Node" parent="."]
 script = ExtResource( 1 )
-static_body_path = NodePath("../Boulder")
 
-[node name="Walls" type="StaticBody2D" parent="."]
+[node name="World" type="StaticBody2D" parent="."]
+__meta__ = {
+"_edit_lock_": true
+}
 
-[node name="Polygon2D" type="Polygon2D" parent="Walls"]
-color = Color( 0.568627, 0.0588235, 0.0588235, 1 )
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World"]
 polygon = PoolVector2Array( 61, 522, 878, 536, 898, 17, 936, 16, 954, 583, 15, 562, 10, 5, 44, 9 )
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Walls"]
-polygon = PoolVector2Array( 61, 522, 878, 536, 898, 17, 936, 16, 954, 583, 15, 562, 10, 5, 44, 9 )
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="Boulder" type="StaticBody2D" parent="."]
-
-[node name="Polygon2D" type="Polygon2D" parent="Boulder"]
-color = Color( 0.12549, 0.243137, 0.639216, 1 )
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="World"]
 polygon = PoolVector2Array( 203, 255, 219, 389, 412, 372, 335, 297 )
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Boulder"]
-polygon = PoolVector2Array( 203, 255, 219, 389, 412, 372, 335, 297 )
+[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="World"]
+polygon = PoolVector2Array( 537, 445, 536, 473, 668, 437, 653, 361 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2( 512, 300 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Player" type="KinematicBody2D" parent="."]
+position = Vector2( 533, 187 )
+script = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource( 1 )
 __meta__ = {
 "_edit_lock_": true
 }
