@@ -28,19 +28,34 @@ __meta__ = {
 }
 
 [node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="World"]
-polygon = PoolVector2Array( 537, 445, 536, 473, 668, 437, 653, 361 )
+position = Vector2( 3, 5 )
+polygon = PoolVector2Array( 653, 392, 474, 495, 797, 401, 488, 242 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="World"]
+position = Vector2( -32, 307 )
+polygon = PoolVector2Array( 155, 208, 209, 203, 210, 193, 265, 192, 265, 183, 327, 181, 326, 171, 377, 170, 377, 223, 154, 220 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionPolygon2D5" type="CollisionPolygon2D" parent="World"]
+position = Vector2( -150, -38 )
+polygon = PoolVector2Array( 233, 181, 276, 112, 326, 165, 385, 113, 427, 165, 489, 111, 542, 156, 605, 110, 629, 169, 701, 109, 724, 188 )
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="Camera2D" type="Camera2D" parent="."]
-offset = Vector2( 512, 300 )
+position = Vector2( 512, 300 )
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="Player" type="KinematicBody2D" parent="."]
-position = Vector2( 533, 187 )
+position = Vector2( 282, 49 )
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]

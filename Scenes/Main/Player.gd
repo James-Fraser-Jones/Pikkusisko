@@ -1,28 +1,102 @@
 extends KinematicBody2D
 
-#to implement auto-step-up we just need a way to fire a raycast at the specifc convext collision shape
-#which the foot collided with, ignoring all other colliders and all other collision shapes in this collider
-#but don't allow auto-step-up in the case where the player is still colliding with something when placed at the correct position
-#we step x before y, but in practice the only time the player will ever have vertical movement is due to gravity so
-#we could just have seperate movement mechanics during "falling"
-#falling ends when a foot collision occours, at which point gravity is disabled again
-#also we should add logic to make climbing slopes slower depending on incline, based on pythag to keep roughly constant speed
-#for some reason bashing player's head allows them to "slide" using the debug movement (bug?)
-#also works for moving downwards but only on particularly steep inclines, this shouldn't matter too much anyway
+#params
+var speed : float = 300
+var gravity : float = 50
+var jump : float = 15
+var foot_collision_angle : float = 70 
+var step_down_max : float = 5
+var step_up_delta : float = .2
 
-var speed : float = 400
-var gravity : float = 100
-var foot_collision_angle : float = 70 #don't auto-step-down onto a non-foot-colliding surface!
-var max_step_up : float = 5
-var max_step_down : float = 5
-
-var falling : bool = true #triggers gravity, enabled on jump and when auto-step-down failed
+#state
+var velocity : Vector2 = Vector2.ZERO
+var falling : bool = true #triggers gravity, enabled on jump and when auto-step-down failed to find floor
 
 func _physics_process(delta):
-	debug_move(delta)
+	move(delta)
 
-func debug_move(delta):
-	var input: Vector2 = Vector2.ZERO
+func move(delta):
+	if falling:
+		#step x
+		var input = lr()
+		var movement = input * speed * delta
+		move_and_collide(movement)
+		#step y
+		velocity += Vector2.DOWN * gravity * delta
+		var collision = move_and_collide(velocity)
+		if collision:
+			if is_foot_collision(collision):
+				falling = false
+				velocity = Vector2.ZERO
+			else:
+				velocity = velocity.slide(collision.normal)
+				move_and_collide(collision.remainder.slide(collision.normal))
+		velocity.x = 0 #eliminate horizontal momentum caused by sliding, after each move step
+	else:
+		#step x
+		var input = lr()
+		if input != Vector2.ZERO:
+			var old_x : float = position.x
+			var movement = input * speed * delta
+			var collision = move_and_collide(movement)
+			if collision and is_foot_collision(collision): #auto-step-up
+				position.x += collision.remainder.x #consistent horizontal speed, regardless of slope
+				var info = {"collider": collision.collider_id, "shape": collision.collider_shape_index}
+				var new_info
+				while true:
+					position.y -= step_up_delta
+					new_info = colliding_with()
+					if new_info:
+						if info.collider != new_info.collider or info.shape != new_info.shape: #collided into ceiling
+							position.x = old_x #undo movement entirely
+							break
+					else: #no-longer colliding
+						break
+			else: #auto-step-down
+				collision = move_and_collide(Vector2.DOWN * step_down_max, true, true, true)
+				if collision and is_foot_collision(collision):
+					move_and_collide(Vector2.DOWN * step_down_max)
+				else:
+					falling = true
+		#step y
+		if !falling:
+			if Input.is_action_just_pressed("up"):
+				falling = true
+				velocity.y = -jump
+	
+func is_foot_collision(collision) -> bool:
+	var deg_angle : float = rad2deg(collision.get_angle())
+	return deg_angle <= foot_collision_angle
+	
+func colliding_with() -> Dictionary:
+	var collision = move_and_collide(Vector2.ZERO, true, true, true)
+	if collision:
+		return {"collider": collision.collider_id, "shape": collision.collider_shape_index}
+	return {}
+	
+func lr() -> Vector2:
+	var input : Vector2 = Vector2.ZERO
+	if Input.is_action_pressed('right'):
+		input.x += 1
+	if Input.is_action_pressed('left'):
+		input.x -= 1
+	return input
+
+func debug_move_collide(delta):
+	var input = lrud()
+	var movement = input*speed*delta
+	var collision = move_and_collide(movement)
+	if collision:
+		pass
+
+func debug_move_through(delta):
+	var input = lrud()
+	var movement = input*speed*delta
+	position += movement
+	pass
+
+func lrud() -> Vector2:
+	var input : Vector2 = Vector2.ZERO
 	if Input.is_action_pressed('right'):
 		input.x += 1
 	if Input.is_action_pressed('left'):
@@ -31,9 +105,4 @@ func debug_move(delta):
 		input.y -= 1
 	if Input.is_action_pressed('down'):
 		input.y += 1
-	var movement: Vector2 = input.normalized()*speed*delta
-	var collision = move_and_collide(movement)
-	if collision:
-		var angle = rad2deg(abs(collision.normal.angle_to(Vector2.UP)))
-		var foot_collision : bool = angle <= foot_collision_angle 
-		print("ID: ", collision.collider_id, ", Index: ", collision.collider_shape_index, ", Angle: ", angle, ", Foot: ", foot_collision)
+	return input.normalized()
