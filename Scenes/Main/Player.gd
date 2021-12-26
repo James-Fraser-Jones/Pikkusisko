@@ -6,7 +6,7 @@ var gravity : float = 50
 var jump : float = 15
 var foot_collision_angle : float = 70 
 var step_down_max : float = 5
-var step_up_delta : float = .2
+var step_up_delta : float = .1
 
 #state
 var velocity : Vector2 = Vector2.ZERO
@@ -36,7 +36,7 @@ func move(delta):
 		#step x
 		var input = lr()
 		if input != Vector2.ZERO:
-			var old_x : float = position.x
+			var old_pos : Vector2 = position
 			var movement = input * speed * delta
 			var collision = move_and_collide(movement)
 			if collision and is_foot_collision(collision): #auto-step-up
@@ -48,7 +48,8 @@ func move(delta):
 					new_info = colliding_with()
 					if new_info:
 						if info.collider != new_info.collider or info.shape != new_info.shape: #collided into ceiling
-							position.x = old_x #undo movement entirely
+							position = old_pos #undo movement entirely
+							position.y -= .5 #prevent stuck-ness
 							break
 					else: #no-longer colliding
 						break

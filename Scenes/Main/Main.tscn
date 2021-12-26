@@ -36,7 +36,7 @@ __meta__ = {
 
 [node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="World"]
 position = Vector2( -32, 307 )
-polygon = PoolVector2Array( 155, 208, 209, 203, 210, 193, 265, 192, 265, 183, 327, 181, 326, 171, 377, 170, 377, 223, 154, 220 )
+polygon = PoolVector2Array( 155, 208, 209, 207, 209, 200, 265, 199, 265, 191, 326, 190, 326, 182, 377, 182, 377, 214, 155, 216 )
 __meta__ = {
 "_edit_lock_": true
 }
