@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scenes/PlayerCamera/PlayerCamera.gd" type="Script" id=1]
+
+[node name="PlayerCamera" type="Camera2D"]
+current = true
+process_mode = 0
+script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": "Camera that tracks the player (or any other target) along a specified path."
+}
