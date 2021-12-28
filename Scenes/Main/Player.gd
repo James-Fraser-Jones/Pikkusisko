@@ -5,7 +5,7 @@ var speed : float = 300
 var gravity : float = 50
 var jump : float = 15
 var foot_collision_angle : float = 70 
-var step_down_max : float = 5
+var step_down_max : float = 8
 var step_up_delta : float = .1
 
 #state
