@@ -8,11 +8,37 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Reference",
+"class": "Dialogue",
+"language": "GDScript",
+"path": "res://Dialogue/Dialogue.gd"
+}, {
+"base": "Reference",
+"class": "Sentence",
+"language": "GDScript",
+"path": "res://Dialogue/Sentence.gd"
+}, {
+"base": "Reference",
+"class": "SentenceEvent",
+"language": "GDScript",
+"path": "res://Dialogue/SentenceEvent.gd"
+} ]
+_global_script_class_icons={
+"Dialogue": "",
+"Sentence": "",
+"SentenceEvent": ""
+}
+
 [application]
 
 config/name="Pikkusisko"
 run/main_scene="res://Scenes/Main/Main.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+DialogueInterface="*res://Dialogue/DialogueInterface.gd"
 
 [input]
 
