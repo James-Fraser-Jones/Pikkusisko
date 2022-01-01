@@ -23,11 +23,17 @@ _global_script_classes=[ {
 "class": "SentenceEvent",
 "language": "GDScript",
 "path": "res://Dialogue/SentenceEvent.gd"
+}, {
+"base": "Node2D",
+"class": "SpeechBubble",
+"language": "GDScript",
+"path": "res://Scenes/SpeechBubble/SpeechBubble.gd"
 } ]
 _global_script_class_icons={
 "Dialogue": "",
 "Sentence": "",
-"SentenceEvent": ""
+"SentenceEvent": "",
+"SpeechBubble": ""
 }
 
 [application]
@@ -75,6 +81,12 @@ down={
 interact={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":32,"unicode":0,"echo":false,"script":null)
+ ]
+}
+next_sentence={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":32,"unicode":0,"echo":false,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":16777221,"unicode":0,"echo":false,"script":null)
  ]
 }
 

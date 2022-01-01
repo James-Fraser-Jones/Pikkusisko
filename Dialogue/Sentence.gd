@@ -14,8 +14,27 @@ var speed : float
 # to see what it's used for.
 var events : Array
 
+
 # this is used to define which character is speaking
 var character : String
+
+# either a dictionary of choices, a string or null
+# if it's null, end dialogue
+# if it just has a string, immediately 
+# if it's a dictionary of choices, prompt the player to choose between them
+var choices
+
+# example choices:
+# choices = {
+#   "choice1" : "nextsentenceID1"
+#   "choice2" : "nextsentenceID2"
+# } 
+# in the example above, if the player chooses choice1, it will land them into
+# the sentence with the id of nextsentenceID1 and so on
+#
+
+
+
 
 
 

@@ -2,6 +2,10 @@
 # one or more characters
 class_name Dialogue
 
-# this array stores objects of the Sentence class
-var sentences : Array
+
+# the id of the first sentence
+var first_sentence : String
+
+# this dictionary stores objects of the Sentence class, key is id and value is the object
+var sentences : Dictionary
 
