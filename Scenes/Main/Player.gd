@@ -4,14 +4,18 @@ extends KinematicBody2D
 var speed : float = 300
 var gravity : float = 50
 var jump : float = 15
-var foot_collision_angle : float = 70
+var floor_collision_angle : float = 70
 var step_down_max : float = 8
-var step_up_max : float = 8
+var step_up_max : float = 11
 var step_up_delta : float = .1
+
+#consts
+var fca : float = deg2rad(floor_collision_angle)
 
 #state
 var velocity : Vector2 = Vector2.ZERO
 var falling : bool = true #triggers gravity, enabled on jump and when auto-step-down failed to find floor
+var floor_angle : float = 0
 
 func _physics_process(delta):
 	move(delta)
@@ -26,7 +30,7 @@ func move(delta):
 		velocity += Vector2.DOWN * gravity * delta
 		var collision = move_and_collide(velocity)
 		if collision:
-			if is_foot_collision(collision):
+			if is_floor_collision(collision):
 				falling = false
 				velocity = Vector2.ZERO
 			else:
@@ -37,10 +41,11 @@ func move(delta):
 		#step x
 		var input = lr()
 		if input != Vector2.ZERO:
-			var movement = input * speed * delta
+			#scale horizontal move speed based on most recent floor collision angle (to make actual speed constant)
+			var movement = input * speed * delta * cos(floor_angle) 
 			var collision = move_and_collide(movement)
 			if collision: #auto-step-up
-				if is_foot_collision(collision): #if collided into a wall, do nothing
+				if is_floor_collision(collision): #if collided into a wall, do nothing
 					var old_pos : Vector2 = position
 					var remainder : Vector2 = collision.remainder
 					var step_up : float = 0
@@ -53,14 +58,17 @@ func move(delta):
 						step_up += step_up_delta
 						collision = move_and_collide(remainder) #step-across
 						if collision:
-							remainder = collision.remainder
+							if is_floor_collision(collision):
+								remainder = collision.remainder
+							else: #collided into a wall
+								break
 						else: #completed movement
 							break
 					if step_up > step_up_max: #undo movement if we ascended more than step_up_max this frame
-						position = old_pos	
+						position = old_pos
 			else: #auto-step-down
 				collision = move_and_collide(Vector2.DOWN * step_down_max, true, true, true)
-				if collision and is_foot_collision(collision):
+				if collision and is_floor_collision(collision):
 					move_and_collide(Vector2.DOWN * step_down_max)
 				else:
 					falling = true
@@ -70,9 +78,13 @@ func move(delta):
 				falling = true
 				velocity.y = -jump
 	
-func is_foot_collision(collision) -> bool:
-	var deg_angle : float = rad2deg(collision.get_angle())
-	return deg_angle <= foot_collision_angle
+func is_floor_collision(collision) -> bool:
+	var angle : float = collision.get_angle()
+	if angle <= fca:
+		floor_angle = angle
+		return true
+	else:
+		return false
 	
 func colliding_with() -> Dictionary:
 	var collision = move_and_collide(Vector2.ZERO, true, true, true)
