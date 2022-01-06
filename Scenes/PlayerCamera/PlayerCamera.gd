@@ -12,6 +12,8 @@ enum MODE {
 	AREA,	# stays in area that's defined in the specified Navigation2D node
 			# use "path_to_camera_area"
 			# utilizes Navigation2D's get_closest_point() method
+			
+	POINT # looks at a specific point defined in the camera_point variable
 }
 
 export(MODE) var mode : int = MODE.PATH
@@ -34,10 +36,12 @@ func _physics_process(delta):
 			new_position = camera_path.curve.get_closest_point(player.global_position)
 		elif mode == MODE.AREA and is_instance_valid(camera_area):
 			new_position = camera_area.get_closest_point(player.global_position)
+		elif mode == MODE.POINT:
+			new_position = camera_point
 		elif mode == MODE.FREE:
 			new_position = player.global_position
-			
+		
 		if smoothing:
 			global_position = lerp(global_position, new_position, camera_speed*delta)
 		else:
-			global_position = new_position
+			global_position = global_position.move_toward(new_position, camera_speed*delta)

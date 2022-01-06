@@ -60,7 +60,7 @@ __meta__ = {
 }
 
 [node name="Player" type="KinematicBody2D" parent="."]
-position = Vector2( 872, 20 )
+position = Vector2( 297, 30 )
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
@@ -73,13 +73,11 @@ __meta__ = {
 
 [node name="PlayerCamera" parent="Camera" instance=ExtResource( 3 )]
 position = Vector2( 512, 300 )
-enabled = false
-mode = 3
+mode = 0
 path_to_player = NodePath("../../Player")
 path_to_camera_path = NodePath("../CameraPath")
 path_to_camera_area = NodePath("../Navigation2D")
 camera_point = Vector2( 512, 300 )
-smoothing = false
 
 [node name="CameraPath" type="Path2D" parent="Camera"]
 modulate = Color( 1, 1, 1, 0.133333 )

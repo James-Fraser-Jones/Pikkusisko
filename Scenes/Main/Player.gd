@@ -4,8 +4,9 @@ extends KinematicBody2D
 var speed : float = 300
 var gravity : float = 50
 var jump : float = 15
-var foot_collision_angle : float = 70 
+var foot_collision_angle : float = 70
 var step_down_max : float = 8
+var step_up_max : float = 8
 var step_up_delta : float = .1
 
 #state
@@ -36,23 +37,27 @@ func move(delta):
 		#step x
 		var input = lr()
 		if input != Vector2.ZERO:
-			var old_pos : Vector2 = position
 			var movement = input * speed * delta
 			var collision = move_and_collide(movement)
-			if collision and is_foot_collision(collision): #auto-step-up
-				position.x += collision.remainder.x #consistent horizontal speed, regardless of slope
-				var info = {"collider": collision.collider_id, "shape": collision.collider_shape_index}
-				var new_info
-				while true:
-					position.y -= step_up_delta
-					new_info = colliding_with()
-					if new_info:
-						if info.collider != new_info.collider or info.shape != new_info.shape: #collided into ceiling
-							position = old_pos #undo movement entirely
-							position.y -= .5 #prevent stuck-ness
+			if collision: #auto-step-up
+				if is_foot_collision(collision): #if collided into a wall, do nothing
+					var old_pos : Vector2 = position
+					var remainder : Vector2 = collision.remainder
+					var step_up : float = 0
+					while true:
+						collision = move_and_collide(Vector2.UP * step_up_delta) #step-up
+						if collision: #collided into ceiling
+							step_up += step_up_delta - collision.remainder.length()
+							move_and_collide(remainder) #one last push
 							break
-					else: #no-longer colliding
-						break
+						step_up += step_up_delta
+						collision = move_and_collide(remainder) #step-across
+						if collision:
+							remainder = collision.remainder
+						else: #completed movement
+							break
+					if step_up > step_up_max: #undo movement if we ascended more than step_up_max this frame
+						position = old_pos	
 			else: #auto-step-down
 				collision = move_and_collide(Vector2.DOWN * step_down_max, true, true, true)
 				if collision and is_foot_collision(collision):
