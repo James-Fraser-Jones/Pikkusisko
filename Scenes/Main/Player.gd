@@ -6,16 +6,16 @@ var gravity : float = 50
 var jump : float = 15
 var floor_collision_angle : float = 70
 var step_down_max : float = 8
-var step_up_max : float = 11
+var step_up_max : float = 8
 var step_up_delta : float = .1
 
 #consts
-var fca : float = deg2rad(floor_collision_angle)
+var fca : float = deg2rad(floor_collision_angle) #store in radians
 
 #state
 var velocity : Vector2 = Vector2.ZERO
 var falling : bool = true #triggers gravity, enabled on jump and when auto-step-down failed to find floor
-var floor_angle : float = 0
+var floor_angle : float = 0 #most recent floor collision angle
 
 func _physics_process(delta):
 	move(delta)
@@ -74,7 +74,7 @@ func move(delta):
 					falling = true
 		#step y
 		if !falling:
-			if Input.is_action_just_pressed("up"):
+			if Input.is_action_just_pressed("interact"):
 				falling = true
 				velocity.y = -jump
 	
@@ -86,12 +86,6 @@ func is_floor_collision(collision) -> bool:
 	else:
 		return false
 	
-func colliding_with() -> Dictionary:
-	var collision = move_and_collide(Vector2.ZERO, true, true, true)
-	if collision:
-		return {"collider": collision.collider_id, "shape": collision.collider_shape_index}
-	return {}
-	
 func lr() -> Vector2:
 	var input : Vector2 = Vector2.ZERO
 	if Input.is_action_pressed('right'):
@@ -100,6 +94,7 @@ func lr() -> Vector2:
 		input.x -= 1
 	return input
 
+#FUNCTIONS FOR DEBUGGING
 func debug_move_collide(delta):
 	var input = lrud()
 	var movement = input*speed*delta
@@ -124,3 +119,4 @@ func lrud() -> Vector2:
 	if Input.is_action_pressed('down'):
 		input.y += 1
 	return input.normalized()
+

@@ -11,3 +11,9 @@ extends Node
 #	var result = space_state.intersect_ray(Vector2(x, top), Vector2(x, bottom))
 #	if result:
 #		print("ID: ", result.collider_id, ", Index: ", result.shape)
+
+#func colliding_with() -> Dictionary:
+#	var collision = move_and_collide(Vector2.ZERO, true, true, true)
+#	if collision:
+#		return {"collider": collision.collider_id, "shape": collision.collider_shape_index}
+#	return {}
