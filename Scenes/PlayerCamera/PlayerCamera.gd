@@ -1,5 +1,7 @@
 extends Camera2D
 
+export var enabled : bool = true
+
 enum MODE {
 	FREE,	# no paths to follow and no areas to stay in
 	
@@ -11,9 +13,8 @@ enum MODE {
 			# use "path_to_camera_area"
 			# utilizes Navigation2D's get_closest_point() method
 			
-	POINT	# looks at a specific point defined in the camera_point variable
+	POINT # looks at a specific point defined in the camera_point variable
 }
-
 
 export(MODE) var mode : int = MODE.PATH
 export var path_to_player : NodePath # required
@@ -26,22 +27,21 @@ export var camera_speed : float = 8
 onready var player = get_node(path_to_player)
 onready var camera_path : Path2D = get_node_or_null(path_to_camera_path)
 onready var camera_area : Navigation2D = get_node_or_null(path_to_camera_area)
-
+	
 func _physics_process(delta):
-	var new_position : Vector2
-	
-	if mode == MODE.PATH and is_instance_valid(camera_path):
-		new_position = camera_path.curve.get_closest_point(player.global_position)
-	elif mode == MODE.AREA and is_instance_valid(camera_area):
-		new_position = camera_area.get_closest_point(player.global_position)
-	elif mode == MODE.POINT:
-		new_position = camera_point
-	else:
-		new_position = player.global_position
+	if enabled:
+		var new_position : Vector2
 		
-	
-	if smoothing:
-		global_position = lerp(global_position, new_position, camera_speed*delta)
-	else:
-		global_position = global_position.move_toward(new_position,camera_speed*delta)
+		if mode == MODE.PATH and is_instance_valid(camera_path):
+			new_position = camera_path.curve.get_closest_point(player.global_position)
+		elif mode == MODE.AREA and is_instance_valid(camera_area):
+			new_position = camera_area.get_closest_point(player.global_position)
+		elif mode == MODE.POINT:
+			new_position = camera_point
+		elif mode == MODE.FREE:
+			new_position = player.global_position
 		
+		if smoothing:
+			global_position = lerp(global_position, new_position, camera_speed*delta)
+		else:
+			global_position = global_position.move_toward(new_position, camera_speed*delta)

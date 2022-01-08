@@ -10,7 +10,7 @@ height = 30.0
 
 [sub_resource type="Curve2D" id=2]
 _data = {
-"points": PoolVector2Array( 0, 0, 0, 0, 138, 451, -102.054, 80.6349, 102.054, -80.6349, 193, 198, 0, 0, 0, 0, 443, 298, 0, 0, 0, 0, 424, 455, 0, 0, 0, 0, 141, 451, 0, 0, 0, 0, 424, 455, 0, 0, 0, 0, 442, 298, 0, 0, 0, 0, 389, 244, 0, 0, 0, 0, 480, 183, 0, 0, 0, 0, 668, 214, 0, 0, 0, 0, 633, 22, 0, 0, 0, 0, 98, 28, 0, 0, 0, 0, 632, 23, 0, 0, 0, 0, 668, 213, 0, 0, 0, 0, 873, 333, 0, 0, 0, 0, 871, 425, 0, 0, 0, 0, 828, 487, 0, 0, 0, 0, 732, 498 )
+"points": PoolVector2Array( 0, 0, 0, 0, 138, 451, -102.054, 80.6349, 102.054, -80.6349, 193, 198, 0, 0, 0, 0, 443, 298, 0, 0, 0, 0, 424, 455, 0, 0, 0, 0, 141, 451, 0, 0, 0, 0, 424, 455, 0, 0, 0, 0, 442, 298, 0, 0, 0, 0, 389, 244, 0, 0, 0, 0, 480, 183, 0, 0, 0, 0, 795, 182, 0, 0, 0, 0, 798, 122, 0, 0, 0, 0, 98, 28, 0, 0, 0, 0, 632, 23, 0, 0, 0, 0, 668, 213, 0, 0, 0, 0, 873, 333, 0, 0, 0, 0, 871, 425, 0, 0, 0, 0, 828, 487, 0, 0, 0, 0, 732, 498 )
 }
 
 [sub_resource type="NavigationPolygon" id=3]
@@ -38,6 +38,13 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="CollisionPolygon2D6" type="CollisionPolygon2D" parent="World"]
+position = Vector2( 455, -94 )
+polygon = PoolVector2Array( 200, 296, 334, 343, 290, 200, 290, 270 )
+__meta__ = {
+"_edit_lock_": true
+}
+
 [node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="World"]
 position = Vector2( 3, 5 )
 polygon = PoolVector2Array( 653, 392, 474, 495, 797, 401, 488, 242 )
@@ -60,7 +67,7 @@ __meta__ = {
 }
 
 [node name="Player" type="KinematicBody2D" parent="."]
-position = Vector2( 282, 49 )
+position = Vector2( 297, 30 )
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
@@ -72,10 +79,12 @@ __meta__ = {
 [node name="Camera" type="Node2D" parent="."]
 
 [node name="PlayerCamera" parent="Camera" instance=ExtResource( 3 )]
+position = Vector2( 512, 300 )
 mode = 0
 path_to_player = NodePath("../../Player")
 path_to_camera_path = NodePath("../CameraPath")
 path_to_camera_area = NodePath("../Navigation2D")
+camera_point = Vector2( 512, 300 )
 
 [node name="CameraPath" type="Path2D" parent="Camera"]
 modulate = Color( 1, 1, 1, 0.133333 )
