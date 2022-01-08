@@ -26,6 +26,7 @@ onready var font := body.get_font("")
 func _ready():
 	
 	add_child(pause_timer)
+	pause_timer.one_shot = true
 	add_child(speech_timer)
 	
 	# changing the modulate to black makes it so that you can't use colors,
@@ -74,6 +75,7 @@ func _unhandled_input(event):
 				DialogueInterface.start_sentence_id(sentence.choices)
 		else: # the sentence hasn't been written out, so it skips to the last character to write it
 			current_index = label.text.length()-1
+			pause_timer.start(0.01)
 		
 func trigger_event(event : SentenceEvent):
 	match event.type:
