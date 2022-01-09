@@ -80,7 +80,7 @@ func _unhandled_input(event):
 func trigger_event(event : SentenceEvent):
 	match event.type:
 		event.TYPE.PAUSE:
-			pause_timer.start(event.value)
+			pause_timer.start(float(event.value))
 			yield(pause_timer,"timeout")
 		event.TYPE.SPEED: sentence.speed = event.value
 		event.TYPE.SKIP: current_index += event.value

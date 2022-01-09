@@ -4,20 +4,12 @@
     "sentence1": {
       "text": "Hello, this is test sentence 1.",
       "speed": 10.0,
-      "events": [],
       "character": "test1",
       "choices": "sentence2"
     },
     "sentence2": {
-      "text": "Hello, this is the test sentence 2. This also includes a pause event and choices to choose from.",
+      "text": "Hello, this is the test sentence 2.{PAUSE:1.5} This also includes a pause event and choices to choose from.",
       "speed": 35.0,
-      "events": [
-        {
-          "type": "PAUSE",
-          "index": 35,
-          "value": 1.5
-        }
-      ],
       "character": "test2",
       "choices": {
         "choice 1": "sentence3",
@@ -27,21 +19,18 @@
     "sentence3": {
       "text": "This is the third sentence. It was triggered because you chose the first choice.",
       "speed": 15.0,
-      "events": [],
       "character": "test2",
       "choices": "sentence3-1"
     },
     "sentence3-1": {
       "text": "This sentence is the continuation of the third sentence. It can do some [color=red]cool[/color] stuff using bbcode, for example [wave amp=50 freq=5]waaave[/wave] or [rainbow freq=0.2 sat=10 val=20]rainbow :3[/rainbow], check out the Godot docs on using RichTextLabel BBCode to find out what else there is [wave amp=160 freq=8]thanks for checking out my demo[/wave]",
       "speed": 22.0,
-      "events": [],
       "character": "test1",
       "choices": null
     },
     "sentence4": {
       "text": "This is the fourth sentence, It was triggered because you chose the second choice.",
       "speed": 15.0,
-      "events": [],
       "character": "test2",
       "choices": null
     }

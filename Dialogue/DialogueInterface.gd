@@ -59,6 +59,32 @@ func prompt_choices(choices : Dictionary): # pops up the choice selection
 	get_tree().current_scene.add_child(choice_selection)
 	
 	
+# parses text and returns "text" : same text without the {} tags, and "events": the events found in it
+# example string: "something something{PAUSE:3} [color=red]something[/color] something something"
+# the text it returns still contains the bbcode tags
+static func parse_events(text : String) -> Dictionary:
+	var events = []
+	while true:
+		var pos1 = text.find("{")
+		if pos1 == -1: break
+		var pos2 = text.find("}",pos1)
+		if pos2 == -1: 
+			print("something went wrong with parsing the events, maybe you forgot to close a bracket?")
+			break
+		var length = pos2-pos1
+		var a = text.substr(pos1+1,length-1).split(":")
+		text.erase(pos1,length+1)
+		var event = SentenceEvent.new()
+		event.type = SentenceEvent.TYPE[a[0]]
+		event.value = a[1]
+		event.index = pos1+1
+		events.append(event)
+	return {
+		"text" : text,
+		"events" : events
+	}
+	
+	
 static func load_dialogue(file_path : String) -> Dialogue:
 	var file := File.new()
 	file.open(file_path,file.READ)
@@ -72,24 +98,26 @@ static func load_dialogue(file_path : String) -> Dialogue:
 	return dialogue
 	
 	
-static func sentenceevent_from_dictionary(dict : Dictionary) -> SentenceEvent:
-	var event = SentenceEvent.new()
-	event.type = SentenceEvent.TYPE.get(dict["type"])
-	event.index = dict["index"]
-	event.value = dict["value"]
-	return event
+#static func sentenceevent_from_dictionary(dict : Dictionary) -> SentenceEvent:
+#	var event = SentenceEvent.new()
+#	event.type = SentenceEvent.TYPE.get(dict["type"])
+#	event.index = dict["index"]
+#	event.value = dict["value"]
+#	return event
 	
 	
 static func sentence_from_dictionary(dict : Dictionary) -> Sentence:
 	var sentence = Sentence.new()
-	sentence.text = dict["text"]
+	var parsed = parse_events(dict["text"])
+	sentence.text = parsed["text"]
+	sentence.events = parsed["events"]
 	sentence.character = dict["character"]
 	sentence.speed = dict["speed"]
 	sentence.choices = dict["choices"]
 	
-	for event_dict in dict["events"]:
-		var event = sentenceevent_from_dictionary(event_dict)
-		sentence.events.append(event)
+#	for event_dict in dict["events"]:
+#		var event = sentenceevent_from_dictionary(event_dict)
+#		sentence.events.append(event)
 	
 	return sentence
 	
