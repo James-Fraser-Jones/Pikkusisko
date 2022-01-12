@@ -93,8 +93,9 @@ func move(delta):
 							break
 					if step_up > step_up_max: #undo movement if we ascended more than step_up_max this frame
 						position = old_pos
-				else: #collided into a wall or ceiling
-					falling = true #avoid getting stuck on ceilings
+				else: 
+					if rad2deg(collision.get_angle()) > 91: #collided into ceiling
+						falling = true #avoid getting stuck on ceilings
 			else: #auto-step-down
 				collision = move_and_collide(Vector2.DOWN * step_down_max, true, true, true)
 				if collision and is_floor_collision(collision):
