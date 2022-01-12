@@ -1,8 +1,11 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Scenes/Main/Main.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Main/Player.gd" type="Script" id=2]
 [ext_resource path="res://Scenes/PlayerCamera/PlayerCamera.tscn" type="PackedScene" id=3]
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 200, 10 )
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 20.0
@@ -22,6 +25,7 @@ outlines = [ PoolVector2Array( 247, 184, 207, 245, 340, 285, 397, 334, 434, 330,
 script = ExtResource( 1 )
 
 [node name="World" type="StaticBody2D" parent="."]
+collision_mask = 0
 __meta__ = {
 "_edit_lock_": true
 }
@@ -45,13 +49,6 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="World"]
-position = Vector2( 3, 5 )
-polygon = PoolVector2Array( 653, 392, 474, 495, 797, 401, 488, 242 )
-__meta__ = {
-"_edit_lock_": true
-}
-
 [node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="World"]
 position = Vector2( -32, 307 )
 polygon = PoolVector2Array( 155, 208, 209, 207, 209, 200, 265, 199, 265, 191, 326, 190, 326, 182, 377, 182, 377, 214, 155, 216 )
@@ -66,8 +63,21 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="World"]
+position = Vector2( 3, 5 )
+polygon = PoolVector2Array( 653, 392, 474, 495, 797, 401, 488, 242 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="OneWayStairs" type="CollisionShape2D" parent="World"]
+position = Vector2( 684, -48 )
+rotation = 5.49779
+shape = SubResource( 4 )
+one_way_collision = true
+
 [node name="Player" type="KinematicBody2D" parent="."]
-position = Vector2( 297, 30 )
+position = Vector2( 712, 52 )
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]

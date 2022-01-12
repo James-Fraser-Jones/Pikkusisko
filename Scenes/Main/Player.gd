@@ -42,11 +42,12 @@ func move(delta):
 		var input = lr()
 		if input != Vector2.ZERO:
 			#scale horizontal move speed based on most recent floor collision angle (to make actual speed constant)
-			var movement = input * speed * delta * cos(floor_angle) 
+			var movement = input * speed * delta * cos(floor_angle)
+			var old_pos : Vector2 = position
 			var collision = move_and_collide(movement)
 			if collision: #auto-step-up
 				if is_floor_collision(collision): #if collided into a wall, do nothing
-					var old_pos : Vector2 = position
+					old_pos = position
 					var remainder : Vector2 = collision.remainder
 					var step_up : float = 0
 					while true:
@@ -66,6 +67,8 @@ func move(delta):
 							break
 					if step_up > step_up_max: #undo movement if we ascended more than step_up_max this frame
 						position = old_pos
+				else: #collided into a wall or ceiling
+					falling = true #avoid getting stuck on ceilings
 			else: #auto-step-down
 				collision = move_and_collide(Vector2.DOWN * step_down_max, true, true, true)
 				if collision and is_floor_collision(collision):
