@@ -1,9 +1,13 @@
 extends KinematicBody2D
 
+#VARIABLES
+
 #params
 var speed : float = 300
 var gravity : float = 50
 var jump : float = 15
+var climb_speed : float = 100
+
 var floor_collision_angle : float = 70
 var step_down_max : float = 8
 var step_up_max : float = 8
@@ -16,12 +20,35 @@ var fca : float = deg2rad(floor_collision_angle) #store in radians
 var velocity : Vector2 = Vector2.ZERO
 var falling : bool = true #triggers gravity, enabled on jump and when auto-step-down failed to find floor
 var floor_angle : float = 0 #most recent floor collision angle
+var on_ladder : bool = false
+var climbing : bool = false
 
+#CALLBACKS
 func _physics_process(delta):
 	move(delta)
+	
+func _on_Ladders_body_entered(_body):
+	on_ladder = true
+	
+func _on_Ladders_body_exited(_body):
+	on_ladder = false
+	climbing = false
 
+#MOVEMENT CODE
 func move(delta):
-	if falling:
+	if on_ladder and Input.is_action_pressed('up'):
+		climbing = true
+		velocity = Vector2.ZERO
+		
+	if climbing:
+		var input = lrud()
+		var movement = input * climb_speed * delta
+		move_and_collide(movement)
+		if Input.is_action_just_pressed("interact"):
+				falling = true
+				climbing = false
+				velocity.y = -jump
+	elif falling:
 		#step x
 		var input = lr()
 		var movement = input * speed * delta
@@ -43,11 +70,10 @@ func move(delta):
 		if input != Vector2.ZERO:
 			#scale horizontal move speed based on most recent floor collision angle (to make actual speed constant)
 			var movement = input * speed * delta * cos(floor_angle)
-			var old_pos : Vector2 = position
 			var collision = move_and_collide(movement)
 			if collision: #auto-step-up
 				if is_floor_collision(collision): #if collided into a wall, do nothing
-					old_pos = position
+					var old_pos : Vector2 = position
 					var remainder : Vector2 = collision.remainder
 					var step_up : float = 0
 					while true:
@@ -76,10 +102,9 @@ func move(delta):
 				else:
 					falling = true
 		#step y
-		if !falling:
-			if Input.is_action_just_pressed("interact"):
-				falling = true
-				velocity.y = -jump
+		if Input.is_action_just_pressed("interact"):
+			falling = true
+			velocity.y = -jump
 	
 func is_floor_collision(collision) -> bool:
 	var angle : float = collision.get_angle()
@@ -97,20 +122,6 @@ func lr() -> Vector2:
 		input.x -= 1
 	return input
 
-#FUNCTIONS FOR DEBUGGING
-func debug_move_collide(delta):
-	var input = lrud()
-	var movement = input*speed*delta
-	var collision = move_and_collide(movement)
-	if collision:
-		pass
-
-func debug_move_through(delta):
-	var input = lrud()
-	var movement = input*speed*delta
-	position += movement
-	pass
-
 func lrud() -> Vector2:
 	var input : Vector2 = Vector2.ZERO
 	if Input.is_action_pressed('right'):
@@ -123,3 +134,16 @@ func lrud() -> Vector2:
 		input.y += 1
 	return input.normalized()
 
+#DEBUGGING
+func debug_move_collide(delta):
+	var input = lrud()
+	var movement = input*speed*delta
+	var collision = move_and_collide(movement)
+	if collision:
+		pass
+
+func debug_move_through(delta):
+	var input = lrud()
+	var movement = input*speed*delta
+	position += movement
+	pass
