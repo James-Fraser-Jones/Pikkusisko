@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Scenes/Main/Main.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Main/Player.gd" type="Script" id=2]
@@ -9,6 +9,9 @@ extents = Vector2( 20, 100 )
 
 [sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 200, 10 )
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 20, 2 )
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 20.0
@@ -37,7 +40,7 @@ position = Vector2( 529, 283 )
 shape = SubResource( 5 )
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Ladders"]
-position = Vector2( 141, 322 )
+position = Vector2( 141, 298 )
 shape = SubResource( 5 )
 
 [node name="World" type="StaticBody2D" parent="."]
@@ -90,6 +93,15 @@ __meta__ = {
 position = Vector2( 684, -48 )
 rotation = 5.49779
 shape = SubResource( 4 )
+one_way_collision = true
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="TopOfLadder" type="CollisionShape2D" parent="World"]
+position = Vector2( 141, 200 )
+rotation = 3.14159
+shape = SubResource( 6 )
 one_way_collision = true
 
 [node name="Player" type="KinematicBody2D" parent="."]
